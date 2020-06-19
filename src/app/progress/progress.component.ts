@@ -40,7 +40,7 @@ export class ProgressComponent implements OnInit, OnChanges {
       // new Waggon('W3', null, 55)
     ];
 
-    const t1 = new Track('T1', 250, 150, 450, 150, waggonsT1);
+    const t1 = new Track('T1', 400, 400, 100, 150, waggonsT1);
 
     this.tracks = [
       t1
@@ -56,8 +56,16 @@ export class ProgressComponent implements OnInit, OnChanges {
   }
 
   generateTransform(aWaggon: Waggon): SafeStyle {
-    const deg = 78;
-    return this.sanitizer.bypassSecurityTrustStyle('rotate(' + deg + 'deg)');
+
+    const diffHeight = Math.abs(aWaggon.track.yFrom - aWaggon.track.yTo);
+    console.log('generateTransform (diffHeight): ' + diffHeight);
+    const diffLength = Math.abs(aWaggon.track.xFrom - aWaggon.track.xTo);
+    console.log('generateTransform (diffLength): ' + diffLength);
+
+    const degrees = Math.atan(diffHeight / diffLength) * (180 / Math.PI);
+    console.log('generateTransform: ' + degrees + ' degrees.');
+
+    return this.sanitizer.bypassSecurityTrustStyle('rotate(' + degrees + 'deg)');
   }
 
   private progress(value: number) {
