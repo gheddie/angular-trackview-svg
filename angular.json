@@ -119,6 +119,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "svg-test"
+    }
+  },
+  "defaultProject": "svg-test",
+  "cli": {
+    "analytics": false
+  }
 }

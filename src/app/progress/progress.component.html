@@ -1,0 +1,34 @@
+<div>
+  <svg height="800" width="600">
+
+    <line *ngFor="let track of tracks"
+          [attr.x1]="track.xFrom"
+          [attr.y1]="track.yFrom"
+          [attr.x2]="track.xTo"
+          [attr.y2]="track.yTo"
+          style="stroke:rgb(0,0,0);stroke-width:0.5px"
+    />
+
+    <rect *ngFor="let waggon of collectWaggons()"
+
+          style="stroke:#333333;fill:#dddddd;opacity:0.4"
+
+          [style.transform-origin]="generateTransformOrigin"
+          [style.transform-box]="generateTransformBox"
+          [style.transform]="generateTransform(waggon)"
+
+          [attr.x]="calculateWaggonX(waggon)"
+          [attr.y]="calculateWaggonY(waggon)"
+          [attr.width]="calculateWaggonWidth(waggon)"
+          [attr.height]="calculateWaggonHeight(waggon)"
+
+      (dragstart)="dragstart($event)"
+      (mousemove)="mousemove($event)"
+      (mousedown)="mousedown($event, waggon)"
+      (mouseup)="mouseup($event)"
+    />
+  </svg>
+
+  <div style="visibility:{{showDraggingGhost()}}; width: 100px; height: 50px; border: aquamarine 1px solid">123</div>
+
+</div>
