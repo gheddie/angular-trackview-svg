@@ -11,6 +11,8 @@ import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 })
 export class ProgressComponent implements OnInit, OnChanges {
 
+  private readonly WAGGON_GAP = 10;
+
   tracks: Track[];
 
   // waggons: Waggon[];
@@ -35,12 +37,18 @@ export class ProgressComponent implements OnInit, OnChanges {
 
     const waggonsT1 = [
       // t1
-      new Waggon('W1', null, 300),
-      new Waggon('W2', null, 110),
-      // new Waggon('W3', null, 55)
+      new Waggon('W1', null, 100),
+      new Waggon('W2', null, 50)
     ];
 
-    const t1 = new Track('T1', 400, 400, 100, 150, waggonsT1);
+    // 0 Grad (EAST) --> OK
+    // const t1 = new Track('T1', 400, 400, 800, 400, waggonsT1);
+
+    // 45 Grad (NORTH_EAST) --> NOK
+    // const t1 = new Track('T1', 400, 400, 600, 200, waggonsT1);
+
+    // 90 Grad (NORTH) --> OK
+    const t1 = new Track('T1', 400, 400, 400, 200, waggonsT1);
 
     this.tracks = [
       t1
@@ -131,7 +139,8 @@ export class ProgressComponent implements OnInit, OnChanges {
       console.log('waggon index (add): ' + aWaggon.track.waggons[i].waggonNumber);
     }
 
-    return waggonPos;
+    // for centered
+    return waggonPos + (aWaggon.length / 2) + (this.WAGGON_GAP * (waggonIndex + 1));
   }
 
   findWaggonIndexOnTrack(aWaggon: Waggon): number {
