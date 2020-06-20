@@ -41,14 +41,45 @@ export class ProgressComponent implements OnInit, OnChanges {
       new Waggon('W2', null, 50)
     ];
 
-    // 0 Grad (EAST) --> OK
-    // const t1 = new Track('T1', 400, 400, 800, 400, waggonsT1);
+    // ######### 0 Grad (EAST) --> OK
+    const t1 = new Track('T1', 400, 400, 800, 400, waggonsT1);
 
-    // 45 Grad (NORTH_EAST) --> NOK
+    // ...in between... --> ???
+
+    // ######### 45 Grad (NORTH_EAST) --> NOK
     // const t1 = new Track('T1', 400, 400, 600, 200, waggonsT1);
 
-    // 90 Grad (NORTH) --> OK
-    const t1 = new Track('T1', 400, 400, 400, 200, waggonsT1);
+    // ...in between... --> ???
+
+    // ######### 90 Grad (NORTH) --> OK
+    // const t1 = new Track('T1', 400, 400, 400, 200, waggonsT1);
+
+    // ...in between... --> ???
+
+    // ######### 135 Grad (NORTH_WEST) --> OK
+    // const t1 = new Track('T1', 400, 400, 200, 200, waggonsT1);
+
+    // ...in between... --> ???
+
+    // ######### 180 Grad (WEST) --> ???
+    // const t1 = new Track('T1', 400, 400, 200, 400, waggonsT1);
+
+    // ...in between... --> ???
+
+    // ######### 225 Grad (SOUTH_WEST) --> NOK
+    // const t1 = new Track('T1', 400, 400, 200, 600, waggonsT1);
+
+    // ...in between... --> ???
+
+    // ######### 270 Grad (SOUTH) --> OK
+    // const t1 = new Track('T1', 400, 400, 400, 600, waggonsT1);
+
+    // ...in between... --> ???
+
+    // ######### 315 Grad (SOUTH_EAST) --> OK
+    // const t1 = new Track('T1', 400, 400, 600, 600, waggonsT1);
+
+    // ...in between... --> ???
 
     this.tracks = [
       t1
@@ -207,5 +238,27 @@ export class ProgressComponent implements OnInit, OnChanges {
     yRes = track.yTo - (track.yTo - track.yFrom) * aDistanceFromOrigin / trackLenght;
 
     return new Point(xRes, yRes);
+  }
+
+  // ---
+
+  xPlus(): void {
+    console.log('xPlus');
+    this.tracks[0].xTo = this.tracks[0].xTo + 10;
+  }
+
+  xMinus(): void {
+    console.log('xMinus');
+    this.tracks[0].xTo = this.tracks[0].xTo - 10;
+  }
+
+  yPlus(): void {
+    console.log('yPlus');
+    this.tracks[0].yTo = this.tracks[0].yTo + 10;
+  }
+
+  yMinus(): void {
+    console.log('yMinus');
+    this.tracks[0].yTo = this.tracks[0].yTo - 10;
   }
 }
