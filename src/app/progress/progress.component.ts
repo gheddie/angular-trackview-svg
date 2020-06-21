@@ -273,7 +273,18 @@ export class ProgressComponent implements OnInit, OnChanges {
     return this.trackAngle;
   }
 
+  /**
+   * NORTH_WEST		OK
+   * NORTH_EAST		NOK
+   * SOUTH_WEST		NOK
+   * SOUTH_EAST		OK
+   * NORTH			OK
+   * WEST			OK
+   * SOUTH			OK
+   * EAST			OK
+   */
   getQuadrant(): string {
+
     let result = null;
 
 
