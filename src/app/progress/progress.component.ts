@@ -3,6 +3,7 @@ import {Track} from '../track';
 import {Waggon} from '../waggon';
 import {Point} from '../point';
 import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
+import {Quadrant} from '../quadrant.enum';
 
 @Component({
   selector: 'app-progress',
@@ -25,6 +26,8 @@ export class ProgressComponent implements OnInit, OnChanges {
   value: number = 83;
 
   private sanitizer: DomSanitizer;
+
+  private trackAngle: number;
 
   constructor(private aSanitizer: DomSanitizer) {
     this.progress(83);
@@ -101,7 +104,11 @@ export class ProgressComponent implements OnInit, OnChanges {
     const diffLength = Math.abs(aWaggon.track.xFrom - aWaggon.track.xTo);
     console.log('generateTransform (diffLength): ' + diffLength);
 
-    const degrees = Math.atan(diffHeight / diffLength) * (180 / Math.PI);
+    const angle = Math.atan(diffHeight / diffLength) * (180 / Math.PI);
+    const degrees = angle;
+
+    this.trackAngle = angle;
+
     console.log('generateTransform: ' + degrees + ' degrees.');
 
     return this.sanitizer.bypassSecurityTrustStyle('rotate(' + degrees + 'deg)');
@@ -260,5 +267,41 @@ export class ProgressComponent implements OnInit, OnChanges {
   yMinus(): void {
     console.log('yMinus');
     this.tracks[0].yTo = this.tracks[0].yTo - 10;
+  }
+
+  getTrackAngle(): number {
+    return this.trackAngle;
+  }
+
+  getQuadrant(): string {
+    let result = null;
+
+
+    const track = this.tracks[0];
+    if (track.yFrom === track.yTo) {
+      if (track.xFrom < track.xTo) {
+        result = Quadrant[Quadrant.EAST];
+      } else {
+        result = Quadrant[Quadrant.WEST];
+      }
+    } else if (track.xFrom === track.xTo) {
+      if (track.yFrom < track.yTo) {
+        result = Quadrant[Quadrant.SOUTH];
+      } else {
+        result = Quadrant[Quadrant.NORTH];
+      }
+    } else {
+      if (track.xTo > track.xFrom && track.yTo > track.yFrom) {
+        result = Quadrant[Quadrant.SOUTH_EAST];
+      } else if (track.xTo > track.xFrom && track.yTo < track.yFrom) {
+        result = Quadrant[Quadrant.NORTH_EAST];
+      } else if (track.xTo < track.xFrom && track.yTo < track.yFrom) {
+        result = Quadrant[Quadrant.NORTH_WEST];
+      } else if (track.xTo < track.xFrom && track.yTo > track.yFrom) {
+        result = Quadrant[Quadrant.SOUTH_WEST];
+      }
+    }
+
+    return result;
   }
 }
