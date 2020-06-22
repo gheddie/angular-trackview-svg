@@ -302,8 +302,20 @@ export class ProgressComponent implements OnInit {
   }
 
   mouseUpOnWaggon($event: MouseEvent, aWaggon: Waggon) {
-    console.log('mouseup [' + aWaggon.waggonNumber + ']');
-    this.waggonHitForDrag = false;
+    // console.log('mouseup [' + aWaggon.waggonNumber + ']');
+    if (this.waggonHitForDrag) {
+      console.log(this.collectWaggons(true).length + ' waggons dropped on waggon: ' + aWaggon.waggonNumber);
+      this.waggonHitForDrag = false;
+      this.deselectWaggons();
+      aWaggon.dropTarget = false;
+      this.dropTargetWaggon = null;
+    }
+  }
+
+  private deselectWaggons(): void {
+    for (const wg of this.collectWaggons(true)) {
+      wg.selected = false;
+    }
   }
 
   mouseUpOnParent(): void {
