@@ -11,7 +11,7 @@
 
     <rect *ngFor="let waggon of collectWaggons()"
 
-          style="stroke:#333333;fill:#dddddd;opacity:0.4"
+          style="stroke:#333333;fill:#dddddd;opacity:0.4;border:5px solid green"
 
           [style.transform-origin]="generateTransformOrigin"
           [style.transform-box]="generateTransformBox"
@@ -35,11 +35,4 @@
   <button (click)="xMinus()">X-</button>
   <button (click)="yPlus()">Y+</button>
   <button (click)="yMinus()">Y-</button>
-  <br>
-  Angle (Track): {{getTrackAngle()}}
-  <br>
-  Angle (Waggon): {{getWaggonAngle()}}
-  <br>
-  Quadrant: {{getQuadrantForTestWaggon()}}
-
 </div>

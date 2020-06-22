@@ -43,7 +43,8 @@ export class ProgressComponent implements OnInit, OnChanges {
     const waggonsT1 = [
       // t1
       new Waggon('W1', null, 100),
-      new Waggon('W2', null, 50)
+      new Waggon('W2', null, 50),
+      new Waggon('W3', null, 75),
     ];
 
     // ######### 0 Grad (EAST)
@@ -269,6 +270,7 @@ export class ProgressComponent implements OnInit, OnChanges {
     this.tracks[0].yTo = this.tracks[0].yTo - 10;
   }
 
+  /*
   getTrackAngle(): number {
     return this.trackAngle;
   }
@@ -276,6 +278,7 @@ export class ProgressComponent implements OnInit, OnChanges {
   getWaggonAngle(): number {
     return this.waggonAngle;
   }
+  */
 
   getQuadrantForTestWaggon(): Quadrant {
     return this.getQuadrant(this.tracks[0]);
