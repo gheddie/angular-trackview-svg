@@ -35,8 +35,10 @@
     </rect>
   </svg>
 
-  <div class="dragging-ghost" style="visibility:{{showDraggingGhost()}}; top:{{draggingGhostTop()}}px; left: {{draggingGhostLeft()}}px; width: 100px; height: 50px; border: aquamarine 1px solid">
-    {{generateDraggingGhost()}}
+  <div class="dragging-ghost" style="visibility:{{showDraggingGhost()}}; top:{{draggingGhostTop()}}px; left: {{draggingGhostLeft()}}px; border: 1px solid black">
+    <span *ngFor="let waggon of collectWaggons(true)">
+      {{waggon.waggonNumber}}<br>
+    </span>
   </div>
 
 </div>

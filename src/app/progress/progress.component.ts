@@ -283,7 +283,7 @@ export class ProgressComponent implements OnInit {
     this.mouseY = (event as MouseEvent).clientY + 5;
 
     this.distanceFromDragOrigin = Math.sqrt((Math.pow(this.mouseX - this.dragOriginX, 2)) + (Math.pow(this.mouseY - this.dragOriginY, 2)));
-    console.log('distanceFromDragOrigin: ' + this.distanceFromDragOrigin);
+    // console.log('distanceFromDragOrigin: ' + this.distanceFromDragOrigin);
   }
 
   // ---
