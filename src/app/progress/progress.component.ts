@@ -18,12 +18,6 @@ export class ProgressComponent implements OnInit {
 
   tracks: Track[];
 
-  draggingWaggon: boolean = false;
-
-  mouseDownOnWaggon: boolean = false;
-
-  dashoffset: number;
-
   private sanitizer: DomSanitizer;
 
   private trackAngle: number;
@@ -33,6 +27,12 @@ export class ProgressComponent implements OnInit {
   private mouseX: number = 0;
 
   private mouseY: number = 0;
+
+  private waggonHitForDrag: boolean = false;
+
+  private dragOriginX: number;
+
+  private dragOriginY: number;
 
   constructor(private aSanitizer: DomSanitizer) {
     this.sanitizer = aSanitizer;
@@ -102,28 +102,11 @@ export class ProgressComponent implements OnInit {
     console.log('dragstart');
   }
 
-  mousemove($event: MouseEvent) {
-    console.log('mousemove');
-    if (this.mouseDownOnWaggon) {
-      this.draggingWaggon = true;
-    }
-  }
-
-  mousedown($event: MouseEvent, aWaggon: Waggon) {
-    console.log('mousedown [' + aWaggon.waggonNumber + ']');
-    this.mouseDownOnWaggon = true;
-  }
-
-  mouseup($event: MouseEvent) {
-    console.log('mouseup');
-    this.mouseDownOnWaggon = false;
-  }
-
   showDraggingGhost(): string {
-    if (this.draggingWaggon) {
-      return 'visible';
-    }
-    return 'hidden';
+      if (this.waggonHitForDrag) {
+        return 'visible';
+      }
+      return 'hidden';
   }
 
   collectWaggons(onlySelected: boolean): Waggon[] {
@@ -288,13 +271,27 @@ export class ProgressComponent implements OnInit {
     return this.mouseX;
   }
 
-  mouseMoved($event: MouseEvent): void {
+  mouseMovedOnParent($event: MouseEvent): void {
     // console.log('mouseMoved');
     this.mouseX = (event as MouseEvent).clientX + 5;
     this.mouseY = (event as MouseEvent).clientY + 5;
   }
 
-  parentMouseUp(): void {
+  // ---
 
+  mouseDownOnWaggon($event: MouseEvent, aWaggon: Waggon) {
+    console.log('mousedown [' + aWaggon.waggonNumber + ']');
+    this.waggonHitForDrag = true;
+    this.dragOriginX = (event as MouseEvent).clientX;
+    this.dragOriginY = (event as MouseEvent).clientY;
+  }
+
+  mouseUpOnWaggon($event: MouseEvent) {
+    console.log('mouseup');
+    this.waggonHitForDrag = false;
+  }
+
+  mouseUpOnParent(): void {
+    this.waggonHitForDrag = false;
   }
 }

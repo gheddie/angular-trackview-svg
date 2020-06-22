@@ -1,4 +1,4 @@
-<div (mousemove)="mouseMoved($event)" (mouseup)="parentMouseUp()">
+<div (mousemove)="mouseMovedOnParent($event)" (mouseup)="mouseUpOnParent()">
 
   <svg height="600" width="1200">
 
@@ -29,10 +29,8 @@
           [attr.width]="calculateWaggonWidth(waggon)"
           [attr.height]="calculateWaggonHeight(waggon)"
 
-          (dragstart)="dragstart($event)"
-          (mousemove)="mousemove($event)"
-          (mousedown)="mousedown($event, waggon)"
-          (mouseup)="mouseup($event)">
+          (mousedown)="mouseDownOnWaggon($event, waggon)"
+          (mouseup)="mouseUpOnWaggon($event)">
       <title>{{generateWaggonTooltip(waggon)}}</title>
     </rect>
   </svg>
