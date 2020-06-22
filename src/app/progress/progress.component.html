@@ -8,6 +8,8 @@
           [attr.x2]="track.xTo"
           [attr.y2]="track.yTo"
           style="stroke:rgb(0,0,0);stroke-width:0.5px"
+
+          title="track"
     />
 
     <rect *ngFor="let waggon of collectWaggons()"
@@ -23,10 +25,12 @@
           [attr.width]="calculateWaggonWidth(waggon)"
           [attr.height]="calculateWaggonHeight(waggon)"
 
-      (dragstart)="dragstart($event)"
-      (mousemove)="mousemove($event)"
-      (mousedown)="mousedown($event, waggon)"
-      (mouseup)="mouseup($event)"
+          (dragstart)="dragstart($event)"
+          (mousemove)="mousemove($event)"
+          (mousedown)="mousedown($event, waggon)"
+          (mouseup)="mouseup($event)"
+
+          title="waggon"
     />
   </svg>
 

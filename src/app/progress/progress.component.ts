@@ -12,7 +12,9 @@ import {Quadrant} from '../quadrant.enum';
 })
 export class ProgressComponent implements OnInit, OnChanges {
 
-  private readonly WAGGON_GAP = 10;
+  private readonly WAGGON_GAP_INITIAL = 15;
+
+  private readonly WAGGON_GAP = 5;
 
   tracks: Track[];
 
@@ -38,23 +40,21 @@ export class ProgressComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
 
-    const waggonsT1 = [
-      new Waggon('W1', null, 100),
-      new Waggon('W2', null, 50),
-      new Waggon('W3', null, 75),
-    ];
+    const t1 = new Track('T1', 100, 100, 500, 100, [
+      new Waggon('W1', 25),
+      new Waggon('W2', 50),
+      new Waggon('W3', 35),
+    ], null);
 
-    const t1 = new Track('T1', 400, 400, 800, 400, waggonsT1, null);
+    const t2 = new Track('T2', null, null, 900, 500, [
+      new Waggon('W4', 25),
+      new Waggon('W5', 15)
+    ], t1);
 
-    const waggonsT2 = [
-      new Waggon('W4', null, 100),
-      new Waggon('W5', null, 50)
-    ];
-
-    const t2 = new Track('T2', null, null, 900, 500, waggonsT2, t1);
+    const t3 = new Track('T3', null, null, 900, 100, [new Waggon('W6', 125)], t1);
 
     this.tracks = [
-      t1, t2
+      t1, t2, t3
     ];
   }
 
@@ -171,7 +171,8 @@ export class ProgressComponent implements OnInit, OnChanges {
       waggonPos += aWaggon.track.waggons[i].length;
     }
     // for centered
-    return waggonPos + (aWaggon.length / 2) + (this.WAGGON_GAP * (waggonIndex + 1));
+    // return waggonPos + (aWaggon.length / 2) + (this.WAGGON_GAP * (waggonIndex + 1));
+    return waggonPos + (aWaggon.length / 2) + this.WAGGON_GAP_INITIAL + (this.WAGGON_GAP * (waggonIndex));
   }
 
   findWaggonIndexOnTrack(aWaggon: Waggon): number {
@@ -208,7 +209,7 @@ export class ProgressComponent implements OnInit, OnChanges {
   }
 
   calculateWaggonHeight(aWaggon: Waggon): number {
-    return 30;
+    return 10;
   }
 
   private calculateTrackPoint(track: Track, aDistanceFromOrigin: number, inverted: boolean): Point {

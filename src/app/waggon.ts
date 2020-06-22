@@ -6,9 +6,8 @@ export class Waggon {
   public track: Track;
   public length: number;
 
-  constructor(aWaggonNumber: string, aTrack: Track, aLength: number) {
+  constructor(aWaggonNumber: string, aLength: number) {
     this.waggonNumber = aWaggonNumber;
-    this.track = aTrack;
     this.length = aLength;
   }
 }
