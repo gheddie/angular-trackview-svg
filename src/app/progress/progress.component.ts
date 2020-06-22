@@ -29,6 +29,8 @@ export class ProgressComponent implements OnInit, OnChanges {
 
   private trackAngle: number;
 
+  private waggonAngle: number;
+
   constructor(private aSanitizer: DomSanitizer) {
     this.progress(83);
     this.sanitizer = aSanitizer;
@@ -36,7 +38,7 @@ export class ProgressComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
 
-    console.log(this.sanitizer);
+    // console.log(this.sanitizer);
 
     const waggonsT1 = [
       // t1
@@ -44,45 +46,11 @@ export class ProgressComponent implements OnInit, OnChanges {
       new Waggon('W2', null, 50)
     ];
 
-    // ######### 0 Grad (EAST) --> OK
+    // ######### 0 Grad (EAST)
     const t1 = new Track('T1', 400, 400, 800, 400, waggonsT1);
 
-    // ...in between... --> ???
-
-    // ######### 45 Grad (NORTH_EAST) --> NOK
-    // const t1 = new Track('T1', 400, 400, 600, 200, waggonsT1);
-
-    // ...in between... --> ???
-
-    // ######### 90 Grad (NORTH) --> OK
-    // const t1 = new Track('T1', 400, 400, 400, 200, waggonsT1);
-
-    // ...in between... --> ???
-
-    // ######### 135 Grad (NORTH_WEST) --> OK
-    // const t1 = new Track('T1', 400, 400, 200, 200, waggonsT1);
-
-    // ...in between... --> ???
-
-    // ######### 180 Grad (WEST) --> ???
-    // const t1 = new Track('T1', 400, 400, 200, 400, waggonsT1);
-
-    // ...in between... --> ???
-
-    // ######### 225 Grad (SOUTH_WEST) --> NOK
-    // const t1 = new Track('T1', 400, 400, 200, 600, waggonsT1);
-
-    // ...in between... --> ???
-
-    // ######### 270 Grad (SOUTH) --> OK
+    // ######### 270 Grad (SOUTH)
     // const t1 = new Track('T1', 400, 400, 400, 600, waggonsT1);
-
-    // ...in between... --> ???
-
-    // ######### 315 Grad (SOUTH_EAST) --> OK
-    // const t1 = new Track('T1', 400, 400, 600, 600, waggonsT1);
-
-    // ...in between... --> ???
 
     this.tracks = [
       t1
@@ -97,21 +65,50 @@ export class ProgressComponent implements OnInit, OnChanges {
     return this.sanitizer.bypassSecurityTrustStyle('fill-box');
   }
 
-  generateTransform(aWaggon: Waggon): SafeStyle {
+  generateWaggonTransform(aWaggon: Waggon): SafeStyle {
+
+    const angle = this.calculateWaggonAngle(aWaggon);
+    const degrees = angle;
+    this.trackAngle = angle;
+    // console.log('generateTransform: ' + degrees + ' degrees.');
+    return this.sanitizer.bypassSecurityTrustStyle('rotate(' + degrees + 'deg)');
+  }
+
+  private calculateWaggonAngle(aWaggon: Waggon) {
 
     const diffHeight = Math.abs(aWaggon.track.yFrom - aWaggon.track.yTo);
-    console.log('generateTransform (diffHeight): ' + diffHeight);
+    // console.log('generateTransform (diffHeight): ' + diffHeight);
     const diffLength = Math.abs(aWaggon.track.xFrom - aWaggon.track.xTo);
-    console.log('generateTransform (diffLength): ' + diffLength);
+    // console.log('generateTransform (diffLength): ' + diffLength);
 
-    const angle = Math.atan(diffHeight / diffLength) * (180 / Math.PI);
-    const degrees = angle;
+    let result = 0;
 
-    this.trackAngle = angle;
+    const quadrant = this.getQuadrant(aWaggon.track);
 
-    console.log('generateTransform: ' + degrees + ' degrees.');
+    console.log(' ############### quadrant: ' + quadrant);
 
-    return this.sanitizer.bypassSecurityTrustStyle('rotate(' + degrees + 'deg)');
+    const atan = Math.atan(diffHeight / diffLength) * (180 / Math.PI);
+
+    switch (+Quadrant[quadrant]) {
+      case Quadrant.NORTH_EAST:
+        // console.log('SWITCH ---> NORTH_EAST');
+        result = - atan;
+        break;
+      case Quadrant.SOUTH_WEST:
+        // console.log('SWITCH ---> SOUTH_WEST');
+        result = - atan;
+        break;
+      default:
+        // console.log('SWITCH ---> DEFAULT');
+        result = atan;
+        break;
+    }
+
+    // console.log(' @@@ RESULT: ' + result);
+
+    this.waggonAngle = result;
+
+    return result;
   }
 
   private progress(value: number) {
@@ -151,10 +148,11 @@ export class ProgressComponent implements OnInit, OnChanges {
   }
 
   collectWaggons(): Waggon[] {
-    console.log('collectWaggons');
+
+    // console.log('collectWaggons');
     let collectedWaggons = [];
     for (let tr of this.tracks) {
-      console.log('collectWaggons: ' + tr.trackNumber);
+      // console.log('collectWaggons: ' + tr.trackNumber);
       for (let wg of tr.waggons) {
         collectedWaggons.push(wg);
       }
@@ -166,15 +164,15 @@ export class ProgressComponent implements OnInit, OnChanges {
 
     const waggonIndex = this.findWaggonIndexOnTrack(aWaggon);
 
-    console.log('calcuateWaggonPositionOnTrack [index=' + waggonIndex + ']: ' + aWaggon.waggonNumber);
+    // console.log('calcuateWaggonPositionOnTrack [index=' + waggonIndex + ']: ' + aWaggon.waggonNumber);
 
-    console.log('waggon index: ' + waggonIndex);
+    // console.log('waggon index: ' + waggonIndex);
 
     let waggonPos = 0;
 
     for (let i = 0; i < waggonIndex; i++) {
       waggonPos += aWaggon.track.waggons[i].length;
-      console.log('waggon index (add): ' + aWaggon.track.waggons[i].waggonNumber);
+      // console.log('waggon index (add): ' + aWaggon.track.waggons[i].waggonNumber);
     }
 
     // for centered
@@ -197,16 +195,18 @@ export class ProgressComponent implements OnInit, OnChanges {
   // ---
 
   calculateWaggonX(aWaggon: Waggon): number {
+
     const track = this.tracks[0];
     const point = this.calculateTrackPoint(track, this.calcuateWaggonPositionOnTrack(aWaggon), true);
-    console.log('calculate waggon x:' + point.x);
+    // console.log('calculate waggon x:' + point.x);
     return point.x - (aWaggon.length / 2);
   }
 
   calculateWaggonY(aWaggon: Waggon): number {
+
     const track = this.tracks[0];
     const point = this.calculateTrackPoint(track, this.calcuateWaggonPositionOnTrack(aWaggon), true);
-    console.log('calculate waggon y:' + point.y);
+    // console.log('calculate waggon y:' + point.y);
     return point.y - (this.calculateWaggonHeight(aWaggon) / 2);
   }
 
@@ -250,27 +250,35 @@ export class ProgressComponent implements OnInit, OnChanges {
   // ---
 
   xPlus(): void {
-    console.log('xPlus');
+    // console.log('xPlus');
     this.tracks[0].xTo = this.tracks[0].xTo + 10;
   }
 
   xMinus(): void {
-    console.log('xMinus');
+    // console.log('xMinus');
     this.tracks[0].xTo = this.tracks[0].xTo - 10;
   }
 
   yPlus(): void {
-    console.log('yPlus');
+    // console.log('yPlus');
     this.tracks[0].yTo = this.tracks[0].yTo + 10;
   }
 
   yMinus(): void {
-    console.log('yMinus');
+    // console.log('yMinus');
     this.tracks[0].yTo = this.tracks[0].yTo - 10;
   }
 
   getTrackAngle(): number {
     return this.trackAngle;
+  }
+
+  getWaggonAngle(): number {
+    return this.waggonAngle;
+  }
+
+  getQuadrantForTestWaggon(): Quadrant {
+    return this.getQuadrant(this.tracks[0]);
   }
 
   /**
@@ -283,10 +291,9 @@ export class ProgressComponent implements OnInit, OnChanges {
    * SOUTH			OK
    * EAST			OK
    */
-  getQuadrant(): string {
+  getQuadrant(aTrack: Track): Quadrant {
 
     let result = null;
-
 
     const track = this.tracks[0];
     if (track.yFrom === track.yTo) {

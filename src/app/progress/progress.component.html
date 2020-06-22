@@ -15,7 +15,7 @@
 
           [style.transform-origin]="generateTransformOrigin"
           [style.transform-box]="generateTransformBox"
-          [style.transform]="generateTransform(waggon)"
+          [style.transform]="generateWaggonTransform(waggon)"
 
           [attr.x]="calculateWaggonX(waggon)"
           [attr.y]="calculateWaggonY(waggon)"
@@ -35,13 +35,11 @@
   <button (click)="xMinus()">X-</button>
   <button (click)="yPlus()">Y+</button>
   <button (click)="yMinus()">Y-</button>
-
   <br>
-
-  Angle: {{getTrackAngle()}}
-
+  Angle (Track): {{getTrackAngle()}}
   <br>
-
-  Quadrant: {{getQuadrant()}}
+  Angle (Waggon): {{getWaggonAngle()}}
+  <br>
+  Quadrant: {{getQuadrantForTestWaggon()}}
 
 </div>
