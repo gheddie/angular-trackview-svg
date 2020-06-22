@@ -280,4 +280,8 @@ export class ProgressComponent implements OnInit, OnChanges {
   generateWaggonTooltip(waggon: Waggon): string {
     return 'Wagen-Nr.: ' + waggon.waggonNumber + '\n Wagen-Länge: ' + waggon.length;
   }
+
+  waggonClicked(aWaggon: Waggon): void {
+    aWaggon.selected = !aWaggon.selected;
+  }
 }

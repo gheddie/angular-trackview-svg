@@ -6,6 +6,8 @@ export class Waggon {
   public track: Track;
   public length: number;
 
+  public selected: boolean = false;
+
   constructor(aWaggonNumber: string, aLength: number) {
     this.waggonNumber = aWaggonNumber;
     this.length = aLength;

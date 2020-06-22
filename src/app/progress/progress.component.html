@@ -13,6 +13,8 @@
 
     <rect *ngFor="let waggon of collectWaggons()"
 
+          (click)="waggonClicked(waggon)"
+
           style="stroke:#333333;fill:#dddddd;opacity:0.4;border:5px solid green"
 
           [style.transform-origin]="generateTransformOrigin"
