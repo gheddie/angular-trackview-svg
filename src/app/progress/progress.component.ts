@@ -276,4 +276,8 @@ export class ProgressComponent implements OnInit, OnChanges {
     }
     return aTrack.yFrom;
   }
+
+  generateWaggonTooltip(waggon: Waggon): string {
+    return 'Wagen-Nr.: ' + waggon.waggonNumber + '\n Wagen-Länge: ' + waggon.length;
+  }
 }
