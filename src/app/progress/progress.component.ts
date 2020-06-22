@@ -290,9 +290,11 @@ export class ProgressComponent implements OnInit {
 
   mouseDownOnWaggon($event: MouseEvent, aWaggon: Waggon) {
     console.log('mousedown [' + aWaggon.waggonNumber + ']');
-    this.waggonHitForDrag = true;
-    this.dragOriginX = (event as MouseEvent).clientX;
-    this.dragOriginY = (event as MouseEvent).clientY;
+    if (aWaggon.selected) {
+      this.waggonHitForDrag = true;
+      this.dragOriginX = (event as MouseEvent).clientX;
+      this.dragOriginY = (event as MouseEvent).clientY;
+    }
   }
 
   mouseUpOnWaggon($event: MouseEvent) {
