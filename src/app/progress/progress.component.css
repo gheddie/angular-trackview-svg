@@ -26,3 +26,7 @@
   stroke: #4CAF50;
   transition: all 100ms;
 }
+
+.dragging-ghost {
+  position: absolute;
+}

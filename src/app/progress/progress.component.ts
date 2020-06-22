@@ -12,7 +12,7 @@ import {Quadrant} from '../quadrant.enum';
 })
 export class ProgressComponent implements OnInit, OnChanges {
 
-  private readonly WAGGON_GAP_INITIAL = 15;
+  private readonly WAGGON_GAP_INITIAL = 30;
 
   private readonly WAGGON_GAP = 5;
 
@@ -20,7 +20,9 @@ export class ProgressComponent implements OnInit, OnChanges {
 
   // waggons: Waggon[];
 
-  showDragging: boolean = false;
+  draggingWaggon: boolean = false;
+
+  mouseDownOnWaggon: boolean = false;
 
   radius = 54;
   circumference = 2 * Math.PI * this.radius;
@@ -32,6 +34,10 @@ export class ProgressComponent implements OnInit, OnChanges {
   private trackAngle: number;
 
   private waggonAngle: number;
+
+  private mouseX: number = 0;
+
+  private mouseY: number = 0;
 
   constructor(private aSanitizer: DomSanitizer) {
     this.progress(83);
@@ -71,44 +77,30 @@ export class ProgressComponent implements OnInit, OnChanges {
     const angle = this.calculateWaggonAngle(aWaggon);
     const degrees = angle;
     this.trackAngle = angle;
-    // console.log('generateTransform: ' + degrees + ' degrees.');
     return this.sanitizer.bypassSecurityTrustStyle('rotate(' + degrees + 'deg)');
   }
 
   private calculateWaggonAngle(aWaggon: Waggon) {
 
     const diffHeight = Math.abs(aWaggon.track.getOriginY() - aWaggon.track.yTo);
-    // console.log('generateTransform (diffHeight): ' + diffHeight);
     const diffLength = Math.abs(aWaggon.track.getOriginX() - aWaggon.track.xTo);
-    // console.log('generateTransform (diffLength): ' + diffLength);
 
     let result = 0;
-
     const quadrant = this.getQuadrant(aWaggon.track);
-
-    console.log(' ############### quadrant: ' + quadrant);
-
     const atan = Math.atan(diffHeight / diffLength) * (180 / Math.PI);
 
     switch (+Quadrant[quadrant]) {
       case Quadrant.NORTH_EAST:
-        // console.log('SWITCH ---> NORTH_EAST');
         result = - atan;
         break;
       case Quadrant.SOUTH_WEST:
-        // console.log('SWITCH ---> SOUTH_WEST');
         result = - atan;
         break;
       default:
-        // console.log('SWITCH ---> DEFAULT');
         result = atan;
         break;
     }
-
-    // console.log(' @@@ RESULT: ' + result);
-
     this.waggonAngle = result;
-
     return result;
   }
 
@@ -118,9 +110,11 @@ export class ProgressComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    /*
     if (changes.value.currentValue !== changes.value.previousValue) {
       this.progress(changes.value.currentValue);
     }
+    */
   }
 
   dragstart($event: DragEvent) {
@@ -129,34 +123,43 @@ export class ProgressComponent implements OnInit, OnChanges {
 
   mousemove($event: MouseEvent) {
     console.log('mousemove');
+    if (this.mouseDownOnWaggon) {
+      this.draggingWaggon = true;
+    }
   }
 
   mousedown($event: MouseEvent, aWaggon: Waggon) {
-    console.log(' ##################### mousedown: ' + aWaggon.waggonNumber);
-    this.showDragging = true;
+    console.log('mousedown [' + aWaggon.waggonNumber + ']');
+    this.mouseDownOnWaggon = true;
   }
 
   mouseup($event: MouseEvent) {
     console.log('mouseup');
-    this.showDragging = false;
+    this.mouseDownOnWaggon = false;
   }
 
   showDraggingGhost(): string {
-    if (this.showDragging) {
+    if (this.draggingWaggon) {
       return 'visible';
     }
     return 'hidden';
   }
 
-  collectWaggons(): Waggon[] {
+  collectWaggons(onlySelected: boolean): Waggon[] {
 
-    // console.log('collectWaggons');
-    let collectedWaggons = [];
-    for (let tr of this.tracks) {
-      // console.log('collectWaggons: ' + tr.trackNumber);
+    const collectedWaggons = [];
+    for (const tr of this.tracks) {
       if (tr.waggons != null) {
-        for (let wg of tr.waggons) {
-          collectedWaggons.push(wg);
+        for (const wg of tr.waggons) {
+          if (!onlySelected) {
+            // add anyway
+            collectedWaggons.push(wg);
+          } else {
+            // only add if selected
+            if (wg.selected) {
+              collectedWaggons.push(wg);
+            }
+          }
         }
       }
     }
@@ -209,7 +212,7 @@ export class ProgressComponent implements OnInit, OnChanges {
   }
 
   calculateWaggonHeight(aWaggon: Waggon): number {
-    return 10;
+    return 20;
   }
 
   private calculateTrackPoint(track: Track, aDistanceFromOrigin: number, inverted: boolean): Point {
@@ -281,7 +284,40 @@ export class ProgressComponent implements OnInit, OnChanges {
     return 'Wagen-Nr.: ' + waggon.waggonNumber + '\n Wagen-Länge: ' + waggon.length;
   }
 
+  generateDraggingGhost(): string {
+    let result = '';
+    for (const wg of this.collectWaggons(true)) {
+      result += wg.waggonNumber + '\n';
+    }
+    return result;
+  }
+
   waggonClicked(aWaggon: Waggon): void {
     aWaggon.selected = !aWaggon.selected;
+  }
+
+  waggonFill(aWaggon: Waggon): string {
+    if (aWaggon.selected) {
+      return 'red';
+    }
+    return 'grey';
+  }
+
+  draggingGhostTop(): number {
+    return this.mouseY;
+  }
+
+  draggingGhostLeft(): number {
+    return this.mouseX;
+  }
+
+  mouseMoved($event: MouseEvent): void {
+    // console.log('mouseMoved');
+    this.mouseX = (event as MouseEvent).clientX + 5;
+    this.mouseY = (event as MouseEvent).clientY + 5;
+  }
+
+  parentMouseUp(): void {
+
   }
 }
