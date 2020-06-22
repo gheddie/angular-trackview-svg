@@ -10,7 +10,7 @@ import {Quadrant} from '../quadrant.enum';
   templateUrl: './progress.component.html',
   styleUrls: ['./progress.component.css']
 })
-export class ProgressComponent implements OnInit, OnChanges {
+export class ProgressComponent implements OnInit {
 
   private readonly WAGGON_GAP_INITIAL = 30;
 
@@ -18,16 +18,11 @@ export class ProgressComponent implements OnInit, OnChanges {
 
   tracks: Track[];
 
-  // waggons: Waggon[];
-
   draggingWaggon: boolean = false;
 
   mouseDownOnWaggon: boolean = false;
 
-  radius = 54;
-  circumference = 2 * Math.PI * this.radius;
   dashoffset: number;
-  value: number = 83;
 
   private sanitizer: DomSanitizer;
 
@@ -40,7 +35,6 @@ export class ProgressComponent implements OnInit, OnChanges {
   private mouseY: number = 0;
 
   constructor(private aSanitizer: DomSanitizer) {
-    this.progress(83);
     this.sanitizer = aSanitizer;
   }
 
@@ -104,19 +98,6 @@ export class ProgressComponent implements OnInit, OnChanges {
     return result;
   }
 
-  private progress(value: number) {
-    const progress = value / 100;
-    this.dashoffset = this.circumference * (1 - progress);
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    /*
-    if (changes.value.currentValue !== changes.value.previousValue) {
-      this.progress(changes.value.currentValue);
-    }
-    */
-  }
-
   dragstart($event: DragEvent) {
     console.log('dragstart');
   }
@@ -174,13 +155,11 @@ export class ProgressComponent implements OnInit, OnChanges {
       waggonPos += aWaggon.track.waggons[i].length;
     }
     // for centered
-    // return waggonPos + (aWaggon.length / 2) + (this.WAGGON_GAP * (waggonIndex + 1));
     return waggonPos + (aWaggon.length / 2) + this.WAGGON_GAP_INITIAL + (this.WAGGON_GAP * (waggonIndex));
   }
 
   findWaggonIndexOnTrack(aWaggon: Waggon): number {
     let pos = 0;
-    // let stop: boolean = false;
     for (const wg of aWaggon.track.waggons) {
       if (aWaggon === wg) {
         return pos;
@@ -190,8 +169,6 @@ export class ProgressComponent implements OnInit, OnChanges {
     }
     return pos;
   }
-
-  // ---
 
   calculateWaggonX(aWaggon: Waggon): number {
 
