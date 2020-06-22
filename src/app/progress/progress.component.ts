@@ -38,6 +38,8 @@ export class ProgressComponent implements OnInit {
 
   private distanceFromDragOrigin: number;
 
+  private dropTargetWaggon: Waggon = null;
+
   constructor(private aSanitizer: DomSanitizer) {
     this.sanitizer = aSanitizer;
   }
@@ -265,6 +267,8 @@ export class ProgressComponent implements OnInit {
   waggonFill(aWaggon: Waggon): string {
     if (aWaggon.selected) {
       return 'red';
+    } else if (aWaggon.dropTarget) {
+      return 'blue';
     }
     return 'grey';
   }
@@ -289,7 +293,7 @@ export class ProgressComponent implements OnInit {
   // ---
 
   mouseDownOnWaggon($event: MouseEvent, aWaggon: Waggon) {
-    console.log('mousedown [' + aWaggon.waggonNumber + ']');
+    // console.log('mousedown [' + aWaggon.waggonNumber + ']');
     if (aWaggon.selected) {
       this.waggonHitForDrag = true;
       this.dragOriginX = (event as MouseEvent).clientX;
@@ -297,12 +301,26 @@ export class ProgressComponent implements OnInit {
     }
   }
 
-  mouseUpOnWaggon($event: MouseEvent) {
-    console.log('mouseup');
+  mouseUpOnWaggon($event: MouseEvent, aWaggon: Waggon) {
+    console.log('mouseup [' + aWaggon.waggonNumber + ']');
     this.waggonHitForDrag = false;
   }
 
   mouseUpOnParent(): void {
     this.waggonHitForDrag = false;
+  }
+
+  waggonTriggeredAsDropTarget(aWaggon: Waggon, aTriggered: boolean): void {
+    if (!aWaggon.selected && this.waggonHitForDrag) {
+      if (aTriggered) {
+        console.log('waggon ' + aWaggon.waggonNumber + ' triggered as drop target.');
+        aWaggon.dropTarget = true;
+        this.dropTargetWaggon = aWaggon;
+      } else {
+        console.log('waggon ' + aWaggon.waggonNumber + ' removed as drop target.');
+        aWaggon.dropTarget = false;
+        this.dropTargetWaggon = null;
+      }
+    }
   }
 }

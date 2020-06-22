@@ -30,7 +30,10 @@
           [attr.height]="calculateWaggonHeight(waggon)"
 
           (mousedown)="mouseDownOnWaggon($event, waggon)"
-          (mouseup)="mouseUpOnWaggon($event)">
+          (mouseup)="mouseUpOnWaggon($event, waggon)"
+          (mouseenter)="waggonTriggeredAsDropTarget(waggon, true)"
+          (mouseleave)="waggonTriggeredAsDropTarget(waggon, false)">
+
       <title>{{generateWaggonTooltip(waggon)}}</title>
     </rect>
   </svg>
