@@ -16,6 +16,8 @@ export class ProgressComponent implements OnInit {
 
   private readonly WAGGON_GAP = 5;
 
+  private readonly DRAG_ORIGIN_DISTANCE = 25;
+
   tracks: Track[];
 
   private sanitizer: DomSanitizer;
@@ -33,6 +35,8 @@ export class ProgressComponent implements OnInit {
   private dragOriginX: number;
 
   private dragOriginY: number;
+
+  private distanceFromDragOrigin: number;
 
   constructor(private aSanitizer: DomSanitizer) {
     this.sanitizer = aSanitizer;
@@ -103,7 +107,9 @@ export class ProgressComponent implements OnInit {
   }
 
   showDraggingGhost(): string {
-      if (this.waggonHitForDrag) {
+      if (this.waggonHitForDrag
+        && this.distanceFromDragOrigin > this.DRAG_ORIGIN_DISTANCE
+        && this.collectWaggons(true).length > 0) {
         return 'visible';
       }
       return 'hidden';
@@ -187,7 +193,7 @@ export class ProgressComponent implements OnInit {
 
     if (inverted) {
       aDistanceFromOrigin = trackLenght - aDistanceFromOrigin;
-    }
+    }Math.sqrt((Math.pow(track.xTo - track.getOriginX(), 2)) + (Math.pow(track.yTo - track.getOriginY(), 2)));
 
     xRes = track.xTo - (track.xTo - track.getOriginX()) * aDistanceFromOrigin / trackLenght;
     yRes = track.yTo - (track.yTo - track.getOriginY()) * aDistanceFromOrigin / trackLenght;
@@ -272,9 +278,12 @@ export class ProgressComponent implements OnInit {
   }
 
   mouseMovedOnParent($event: MouseEvent): void {
-    // console.log('mouseMoved');
+
     this.mouseX = (event as MouseEvent).clientX + 5;
     this.mouseY = (event as MouseEvent).clientY + 5;
+
+    this.distanceFromDragOrigin = Math.sqrt((Math.pow(this.mouseX - this.dragOriginX, 2)) + (Math.pow(this.mouseY - this.dragOriginY, 2)));
+    console.log('distanceFromDragOrigin: ' + this.distanceFromDragOrigin);
   }
 
   // ---
