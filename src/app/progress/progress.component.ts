@@ -38,23 +38,23 @@ export class ProgressComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
 
-    // console.log(this.sanitizer);
-
     const waggonsT1 = [
-      // t1
       new Waggon('W1', null, 100),
       new Waggon('W2', null, 50),
       new Waggon('W3', null, 75),
     ];
 
-    // ######### 0 Grad (EAST)
-    const t1 = new Track('T1', 400, 400, 800, 400, waggonsT1);
+    const t1 = new Track('T1', 400, 400, 800, 400, waggonsT1, null);
 
-    // ######### 270 Grad (SOUTH)
-    // const t1 = new Track('T1', 400, 400, 400, 600, waggonsT1);
+    const waggonsT2 = [
+      new Waggon('W4', null, 100),
+      new Waggon('W5', null, 50)
+    ];
+
+    const t2 = new Track('T2', null, null, 900, 500, waggonsT2, t1);
 
     this.tracks = [
-      t1
+      t1, t2
     ];
   }
 
@@ -77,9 +77,9 @@ export class ProgressComponent implements OnInit, OnChanges {
 
   private calculateWaggonAngle(aWaggon: Waggon) {
 
-    const diffHeight = Math.abs(aWaggon.track.yFrom - aWaggon.track.yTo);
+    const diffHeight = Math.abs(aWaggon.track.getOriginY() - aWaggon.track.yTo);
     // console.log('generateTransform (diffHeight): ' + diffHeight);
-    const diffLength = Math.abs(aWaggon.track.xFrom - aWaggon.track.xTo);
+    const diffLength = Math.abs(aWaggon.track.getOriginX() - aWaggon.track.xTo);
     // console.log('generateTransform (diffLength): ' + diffLength);
 
     let result = 0;
@@ -154,8 +154,10 @@ export class ProgressComponent implements OnInit, OnChanges {
     let collectedWaggons = [];
     for (let tr of this.tracks) {
       // console.log('collectWaggons: ' + tr.trackNumber);
-      for (let wg of tr.waggons) {
-        collectedWaggons.push(wg);
+      if (tr.waggons != null) {
+        for (let wg of tr.waggons) {
+          collectedWaggons.push(wg);
+        }
       }
     }
     return collectedWaggons;
@@ -164,18 +166,10 @@ export class ProgressComponent implements OnInit, OnChanges {
   calcuateWaggonPositionOnTrack(aWaggon: Waggon): number {
 
     const waggonIndex = this.findWaggonIndexOnTrack(aWaggon);
-
-    // console.log('calcuateWaggonPositionOnTrack [index=' + waggonIndex + ']: ' + aWaggon.waggonNumber);
-
-    // console.log('waggon index: ' + waggonIndex);
-
     let waggonPos = 0;
-
     for (let i = 0; i < waggonIndex; i++) {
       waggonPos += aWaggon.track.waggons[i].length;
-      // console.log('waggon index (add): ' + aWaggon.track.waggons[i].waggonNumber);
     }
-
     // for centered
     return waggonPos + (aWaggon.length / 2) + (this.WAGGON_GAP * (waggonIndex + 1));
   }
@@ -197,43 +191,32 @@ export class ProgressComponent implements OnInit, OnChanges {
 
   calculateWaggonX(aWaggon: Waggon): number {
 
-    const track = this.tracks[0];
+    const track = aWaggon.track;
     const point = this.calculateTrackPoint(track, this.calcuateWaggonPositionOnTrack(aWaggon), true);
-    // console.log('calculate waggon x:' + point.x);
     return point.x - (aWaggon.length / 2);
   }
 
   calculateWaggonY(aWaggon: Waggon): number {
 
-    const track = this.tracks[0];
+    const track = aWaggon.track;
     const point = this.calculateTrackPoint(track, this.calcuateWaggonPositionOnTrack(aWaggon), true);
-    // console.log('calculate waggon y:' + point.y);
     return point.y - (this.calculateWaggonHeight(aWaggon) / 2);
   }
 
   calculateWaggonWidth(aWaggon: Waggon): number {
-    const track = this.tracks[0];
     return aWaggon.length;
   }
 
   calculateWaggonHeight(aWaggon: Waggon): number {
-    // const track = this.tracks[0];
     return 30;
   }
 
-  // ---
-
-  /**
-   * https://math.stackexchange.com/questions/175896/finding-a-point-along-a-line-a-certain-distance-away-from-another-point
-   *
-   * @param track
-   */
   private calculateTrackPoint(track: Track, aDistanceFromOrigin: number, inverted: boolean): Point {
 
-    const diffX = track.xTo - track.xFrom;
-    const diffY = track.yTo - track.yFrom;
+    const diffX = track.xTo - track.getOriginX();
+    const diffY = track.yTo - track.getOriginY();
 
-    const trackLenght = Math.sqrt((Math.pow(track.xTo - track.xFrom, 2)) + (Math.pow(track.yTo - track.yFrom, 2)));
+    const trackLenght = Math.sqrt((Math.pow(track.xTo - track.getOriginX(), 2)) + (Math.pow(track.yTo - track.getOriginY(), 2)));
 
     let xRes = 0;
     let yRes = 0;
@@ -242,87 +225,54 @@ export class ProgressComponent implements OnInit, OnChanges {
       aDistanceFromOrigin = trackLenght - aDistanceFromOrigin;
     }
 
-    xRes = track.xTo - (track.xTo - track.xFrom) * aDistanceFromOrigin / trackLenght;
-    yRes = track.yTo - (track.yTo - track.yFrom) * aDistanceFromOrigin / trackLenght;
+    xRes = track.xTo - (track.xTo - track.getOriginX()) * aDistanceFromOrigin / trackLenght;
+    yRes = track.yTo - (track.yTo - track.getOriginY()) * aDistanceFromOrigin / trackLenght;
 
     return new Point(xRes, yRes);
   }
 
-  // ---
-
-  xPlus(): void {
-    // console.log('xPlus');
-    this.tracks[0].xTo = this.tracks[0].xTo + 10;
-  }
-
-  xMinus(): void {
-    // console.log('xMinus');
-    this.tracks[0].xTo = this.tracks[0].xTo - 10;
-  }
-
-  yPlus(): void {
-    // console.log('yPlus');
-    this.tracks[0].yTo = this.tracks[0].yTo + 10;
-  }
-
-  yMinus(): void {
-    // console.log('yMinus');
-    this.tracks[0].yTo = this.tracks[0].yTo - 10;
-  }
-
-  /*
-  getTrackAngle(): number {
-    return this.trackAngle;
-  }
-
-  getWaggonAngle(): number {
-    return this.waggonAngle;
-  }
-  */
-
-  getQuadrantForTestWaggon(): Quadrant {
-    return this.getQuadrant(this.tracks[0]);
-  }
-
-  /**
-   * NORTH_WEST		OK
-   * NORTH_EAST		NOK
-   * SOUTH_WEST		NOK
-   * SOUTH_EAST		OK
-   * NORTH			OK
-   * WEST			OK
-   * SOUTH			OK
-   * EAST			OK
-   */
   getQuadrant(aTrack: Track): Quadrant {
 
     let result = null;
 
-    const track = this.tracks[0];
-    if (track.yFrom === track.yTo) {
-      if (track.xFrom < track.xTo) {
+    if (aTrack.getOriginY() === aTrack.yTo) {
+      if (aTrack.getOriginX() < aTrack.xTo) {
         result = Quadrant[Quadrant.EAST];
       } else {
         result = Quadrant[Quadrant.WEST];
       }
-    } else if (track.xFrom === track.xTo) {
-      if (track.yFrom < track.yTo) {
+    } else if (aTrack.getOriginX() === aTrack.xTo) {
+      if (aTrack.getOriginY() < aTrack.yTo) {
         result = Quadrant[Quadrant.SOUTH];
       } else {
         result = Quadrant[Quadrant.NORTH];
       }
     } else {
-      if (track.xTo > track.xFrom && track.yTo > track.yFrom) {
+      if (aTrack.xTo > aTrack.getOriginX() && aTrack.yTo > aTrack.getOriginY()) {
         result = Quadrant[Quadrant.SOUTH_EAST];
-      } else if (track.xTo > track.xFrom && track.yTo < track.yFrom) {
+      } else if (aTrack.xTo > aTrack.getOriginX() && aTrack.yTo < aTrack.getOriginY()) {
         result = Quadrant[Quadrant.NORTH_EAST];
-      } else if (track.xTo < track.xFrom && track.yTo < track.yFrom) {
+      } else if (aTrack.xTo < aTrack.getOriginX() && aTrack.yTo < aTrack.getOriginY()) {
         result = Quadrant[Quadrant.NORTH_WEST];
-      } else if (track.xTo < track.xFrom && track.yTo > track.yFrom) {
+      } else if (aTrack.xTo < aTrack.getOriginX() && aTrack.yTo > aTrack.getOriginY()) {
         result = Quadrant[Quadrant.SOUTH_WEST];
       }
     }
 
     return result;
+  }
+
+  getTrackStartX(aTrack: Track): number {
+    if (aTrack.parentTrack != null) {
+      return aTrack.parentTrack.xTo;
+    }
+    return aTrack.xFrom;
+  }
+
+  getTrackStartY(aTrack: Track): number {
+    if (aTrack.parentTrack != null) {
+      return aTrack.parentTrack.yTo;
+    }
+    return aTrack.yFrom;
   }
 }

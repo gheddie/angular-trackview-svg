@@ -2,8 +2,9 @@
   <svg height="600" width="1200">
 
     <line *ngFor="let track of tracks"
-          [attr.x1]="track.xFrom"
-          [attr.y1]="track.yFrom"
+
+          [attr.x1]="getTrackStartX(track)"
+          [attr.y1]="getTrackStartY(track)"
           [attr.x2]="track.xTo"
           [attr.y2]="track.yTo"
           style="stroke:rgb(0,0,0);stroke-width:0.5px"
@@ -31,8 +32,4 @@
 
   <div style="visibility:{{showDraggingGhost()}}; width: 100px; height: 50px; border: aquamarine 1px solid">123</div>
 
-  <button (click)="xPlus()">X+</button>
-  <button (click)="xMinus()">X-</button>
-  <button (click)="yPlus()">Y+</button>
-  <button (click)="yMinus()">Y-</button>
 </div>
