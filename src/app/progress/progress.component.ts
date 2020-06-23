@@ -340,9 +340,7 @@ export class ProgressComponent implements OnInit {
     }
   }
 
-  // ---
-
-  private moveSelectedWaggons(aTargetTrack: Waggon): void {
+  private moveSelectedWaggons(aTargetWaggon: Waggon): void {
     // remove
     const removedWaggons = [];
     for (const wg of this.collectWaggons(true)) {
@@ -355,17 +353,11 @@ export class ProgressComponent implements OnInit {
     }
     console.log('removed ' + removedWaggons.length + ' waggons.');
     // add
+    const index = aTargetWaggon.track.waggons.indexOf(aTargetWaggon);
     for (const wg of removedWaggons) {
-      console.log('moving: ' + wg.waggonNumber + ' to track: ' + aTargetTrack.track.trackNumber);
-      wg.track = aTargetTrack.track;
-      aTargetTrack.track.waggons.push(wg);
-    }
-  }
-
-  private moveSelectedWaggonsToTarget(aTarget: Waggon) {
-    console.log('target: ' + aTarget.waggonNumber + ' [' + this.collectWaggons(true).length + ' selected].');
-    for (const wg of this.collectWaggons(true)) {
-      console.log('moving: ' + wg.waggonNumber);
+      console.log('moving: ' + wg.waggonNumber + ' to track: ' + aTargetWaggon.track.trackNumber);
+      wg.track = aTargetWaggon.track;
+      aTargetWaggon.track.waggons.splice(index + 1, 0, wg);
     }
   }
 }
