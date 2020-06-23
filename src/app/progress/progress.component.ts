@@ -268,7 +268,7 @@ export class ProgressComponent implements OnInit {
     if (aWaggon.selected) {
       return 'red';
     } else if (aWaggon.dropTarget) {
-      return 'blue';
+      return 'green';
     }
     return 'grey';
   }
@@ -304,7 +304,9 @@ export class ProgressComponent implements OnInit {
   mouseUpOnWaggon($event: MouseEvent, aWaggon: Waggon) {
     // console.log('mouseup [' + aWaggon.waggonNumber + ']');
     if (this.waggonHitForDrag) {
-      console.log(this.collectWaggons(true).length + ' waggons dropped on waggon: ' + aWaggon.waggonNumber);
+      const selection = this.collectWaggons(true);
+      console.log(selection.length + ' waggons dropped on waggon: ' + aWaggon.waggonNumber);
+      this.moveWaggonsToWaggon(aWaggon, selection);
       this.waggonHitForDrag = false;
       this.deselectWaggons();
       aWaggon.dropTarget = false;
@@ -334,5 +336,28 @@ export class ProgressComponent implements OnInit {
         this.dropTargetWaggon = null;
       }
     }
+  }
+
+  // ---
+
+  private moveWaggonsToWaggon(aTarget: Waggon, aSelectedWaggons: Waggon[]): void {
+
+    console.log('moving ' + aSelectedWaggons.length + ' waggons to waggon [' + aTarget.waggonNumber + '].');
+
+    // remove from old track
+    for (const wg of aSelectedWaggons) {
+      const trackWaggons = wg.track.waggons;
+      const index = trackWaggons.indexOf(wg, 0);
+      if (index > -1) {
+        trackWaggons.splice(index, 1);
+      }
+    }
+
+    // add to new track
+    /*
+    for (const wg of aSelectedWaggons) {
+      aTarget.track.waggons.push(wg );
+    }
+    */
   }
 }
