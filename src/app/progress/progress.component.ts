@@ -356,7 +356,7 @@ export class ProgressComponent implements OnInit {
     // add to new track
     /*
     for (const wg of aSelectedWaggons) {
-      aTarget.track.waggons.push(wg );
+      aTarget.track.waggons.push(wg);
     }
     */
   }
