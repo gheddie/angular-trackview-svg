@@ -249,7 +249,7 @@ export class ProgressComponent implements OnInit {
   }
 
   generateWaggonTooltip(waggon: Waggon): string {
-    return 'Wagen-Nr.: ' + waggon.waggonNumber + '\n Wagen-Länge: ' + waggon.length;
+    return 'Wagen-Nr.: ' + waggon.waggonNumber + '\n Wagen-Länge: ' + waggon.length + '\n Gleis: ' + waggon.track.trackNumber;
   }
 
   generateDraggingGhost(): string {
@@ -306,7 +306,7 @@ export class ProgressComponent implements OnInit {
     if (this.waggonHitForDrag) {
       const selection = this.collectWaggons(true);
       console.log(selection.length + ' waggons dropped on waggon: ' + aWaggon.waggonNumber);
-      this.removeSelectedWaggonsFromTracks(aWaggon);
+      this.moveSelectedWaggons(aWaggon);
       // this.moveSelectedWaggonsToTarget(aWaggon);
       this.waggonHitForDrag = false;
       this.deselectWaggons();
@@ -342,7 +342,7 @@ export class ProgressComponent implements OnInit {
 
   // ---
 
-  private removeSelectedWaggonsFromTracks(aTarget: Waggon): void {
+  private moveSelectedWaggons(aTargetTrack: Waggon): void {
     // remove
     const removedWaggons = [];
     for (const wg of this.collectWaggons(true)) {
@@ -356,8 +356,9 @@ export class ProgressComponent implements OnInit {
     console.log('removed ' + removedWaggons.length + ' waggons.');
     // add
     for (const wg of removedWaggons) {
-      console.log('moving: ' + wg.waggonNumber);
-      aTarget.track.waggons.push(wg);
+      console.log('moving: ' + wg.waggonNumber + ' to track: ' + aTargetTrack.track.trackNumber);
+      wg.track = aTargetTrack.track;
+      aTargetTrack.track.waggons.push(wg);
     }
   }
 
