@@ -306,7 +306,8 @@ export class ProgressComponent implements OnInit {
     if (this.waggonHitForDrag) {
       const selection = this.collectWaggons(true);
       console.log(selection.length + ' waggons dropped on waggon: ' + aWaggon.waggonNumber);
-      this.moveWaggonsToWaggon(aWaggon, selection);
+      this.removeSelectedWaggonsFromTracks(aWaggon);
+      // this.moveSelectedWaggonsToTarget(aWaggon);
       this.waggonHitForDrag = false;
       this.deselectWaggons();
       aWaggon.dropTarget = false;
@@ -315,6 +316,7 @@ export class ProgressComponent implements OnInit {
   }
 
   private deselectWaggons(): void {
+    console.log('deselectWaggons...');
     for (const wg of this.collectWaggons(true)) {
       wg.selected = false;
     }
@@ -340,24 +342,29 @@ export class ProgressComponent implements OnInit {
 
   // ---
 
-  private moveWaggonsToWaggon(aTarget: Waggon, aSelectedWaggons: Waggon[]): void {
-
-    console.log('moving ' + aSelectedWaggons.length + ' waggons to waggon [' + aTarget.waggonNumber + '].');
-
-    // remove from old track
-    for (const wg of aSelectedWaggons) {
+  private removeSelectedWaggonsFromTracks(aTarget: Waggon): void {
+    // remove
+    const removedWaggons = [];
+    for (const wg of this.collectWaggons(true)) {
       const trackWaggons = wg.track.waggons;
       const index = trackWaggons.indexOf(wg, 0);
+      removedWaggons.push(trackWaggons[index]);
       if (index > -1) {
         trackWaggons.splice(index, 1);
       }
     }
-
-    // add to new track
-    /*
-    for (const wg of aSelectedWaggons) {
+    console.log('removed ' + removedWaggons.length + ' waggons.');
+    // add
+    for (const wg of removedWaggons) {
+      console.log('moving: ' + wg.waggonNumber);
       aTarget.track.waggons.push(wg);
     }
-    */
+  }
+
+  private moveSelectedWaggonsToTarget(aTarget: Waggon) {
+    console.log('target: ' + aTarget.waggonNumber + ' [' + this.collectWaggons(true).length + ' selected].');
+    for (const wg of this.collectWaggons(true)) {
+      console.log('moving: ' + wg.waggonNumber);
+    }
   }
 }
