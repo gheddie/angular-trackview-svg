@@ -27,18 +27,4 @@ export class Track {
     }
     this.parentTrack = aParentTrack;
   }
-
-  getOriginX(): number {
-    if (this.parentTrack != null) {
-      return this.parentTrack.xTo;
-    }
-    return this.xFrom;
-  }
-
-  getOriginY(): number {
-    if (this.parentTrack != null) {
-      return this.parentTrack.yTo;
-    }
-    return this.yFrom;
-  }
 }

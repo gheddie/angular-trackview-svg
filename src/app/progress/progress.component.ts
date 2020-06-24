@@ -98,8 +98,8 @@ export class ProgressComponent implements OnInit {
 
   private calculateWaggonAngle(aWaggon: Waggon) {
 
-    const diffHeight = Math.abs(aWaggon.track.getOriginY() - aWaggon.track.yTo);
-    const diffLength = Math.abs(aWaggon.track.getOriginX() - aWaggon.track.xTo);
+    const diffHeight = Math.abs(this.getTrackOriginY(aWaggon.track) - aWaggon.track.yTo);
+    const diffLength = Math.abs(this.getTrackOriginX(aWaggon.track) - aWaggon.track.xTo);
 
     let result = 0;
     const quadrant = this.getQuadrant(aWaggon.track);
@@ -201,10 +201,10 @@ export class ProgressComponent implements OnInit {
 
   private calculateTrackPoint(track: Track, aDistanceFromOrigin: number, inverted: boolean): Point {
 
-    const diffX = track.xTo - track.getOriginX();
-    const diffY = track.yTo - track.getOriginY();
+    const diffX = track.xTo - this.getTrackOriginX(track);
+    const diffY = track.yTo - this.getTrackOriginY(track);
 
-    const trackLenght = Math.sqrt((Math.pow(track.xTo - track.getOriginX(), 2)) + (Math.pow(track.yTo - track.getOriginY(), 2)));
+    const trackLenght = Math.sqrt((Math.pow(track.xTo - this.getTrackOriginX(track), 2)) + (Math.pow(track.yTo - this.getTrackOriginY(track), 2)));
 
     let xRes = 0;
     let yRes = 0;
@@ -213,10 +213,10 @@ export class ProgressComponent implements OnInit {
       aDistanceFromOrigin = trackLenght - aDistanceFromOrigin;
     }
 
-    Math.sqrt((Math.pow(track.xTo - track.getOriginX(), 2)) + (Math.pow(track.yTo - track.getOriginY(), 2)));
+    Math.sqrt((Math.pow(track.xTo - this.getTrackOriginX(track), 2)) + (Math.pow(track.yTo - this.getTrackOriginY(track), 2)));
 
-    xRes = track.xTo - (track.xTo - track.getOriginX()) * aDistanceFromOrigin / trackLenght;
-    yRes = track.yTo - (track.yTo - track.getOriginY()) * aDistanceFromOrigin / trackLenght;
+    xRes = track.xTo - (track.xTo - this.getTrackOriginX(track)) * aDistanceFromOrigin / trackLenght;
+    yRes = track.yTo - (track.yTo - this.getTrackOriginY(track)) * aDistanceFromOrigin / trackLenght;
 
     return new Point(xRes, yRes);
   }
@@ -225,26 +225,26 @@ export class ProgressComponent implements OnInit {
 
     let result = null;
 
-    if (aTrack.getOriginY() === aTrack.yTo) {
-      if (aTrack.getOriginX() < aTrack.xTo) {
+    if (this.getTrackOriginY(aTrack) === aTrack.yTo) {
+      if (this.getTrackOriginX(aTrack) < aTrack.xTo) {
         result = Quadrant[Quadrant.EAST];
       } else {
         result = Quadrant[Quadrant.WEST];
       }
-    } else if (aTrack.getOriginX() === aTrack.xTo) {
-      if (aTrack.getOriginY() < aTrack.yTo) {
+    } else if (this.getTrackOriginX(aTrack) === aTrack.xTo) {
+      if (this.getTrackOriginY(aTrack) < aTrack.yTo) {
         result = Quadrant[Quadrant.SOUTH];
       } else {
         result = Quadrant[Quadrant.NORTH];
       }
     } else {
-      if (aTrack.xTo > aTrack.getOriginX() && aTrack.yTo > aTrack.getOriginY()) {
+      if (aTrack.xTo > this.getTrackOriginX(aTrack) && aTrack.yTo > this.getTrackOriginY(aTrack)) {
         result = Quadrant[Quadrant.SOUTH_EAST];
-      } else if (aTrack.xTo > aTrack.getOriginX() && aTrack.yTo < aTrack.getOriginY()) {
+      } else if (aTrack.xTo > this.getTrackOriginX(aTrack) && aTrack.yTo < this.getTrackOriginY(aTrack)) {
         result = Quadrant[Quadrant.NORTH_EAST];
-      } else if (aTrack.xTo < aTrack.getOriginX() && aTrack.yTo < aTrack.getOriginY()) {
+      } else if (aTrack.xTo < this.getTrackOriginX(aTrack) && aTrack.yTo < this.getTrackOriginY(aTrack)) {
         result = Quadrant[Quadrant.NORTH_WEST];
-      } else if (aTrack.xTo < aTrack.getOriginX() && aTrack.yTo > aTrack.getOriginY()) {
+      } else if (aTrack.xTo < this.getTrackOriginX(aTrack) && aTrack.yTo > this.getTrackOriginY(aTrack)) {
         result = Quadrant[Quadrant.SOUTH_WEST];
       }
     }
@@ -260,6 +260,20 @@ export class ProgressComponent implements OnInit {
   }
 
   getTrackStartY(aTrack: Track): number {
+    if (aTrack.parentTrack != null) {
+      return aTrack.parentTrack.yTo;
+    }
+    return aTrack.yFrom;
+  }
+
+  getTrackOriginX(aTrack: Track): number {
+    if (aTrack.parentTrack != null) {
+      return aTrack.parentTrack.xTo;
+    }
+    return aTrack.xFrom;
+  }
+
+  getTrackOriginY(aTrack: Track): number {
     if (aTrack.parentTrack != null) {
       return aTrack.parentTrack.yTo;
     }
