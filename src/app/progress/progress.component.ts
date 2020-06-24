@@ -159,10 +159,10 @@ export class ProgressComponent implements OnInit {
     const waggonIndex = this.findWaggonIndexOnTrack(aWaggon);
     let waggonPos = 0;
     for (let i = 0; i < waggonIndex; i++) {
-      waggonPos += aWaggon.track.waggons[i].length;
+      waggonPos += aWaggon.track.waggons[i].length * this.zoomFactor;
     }
     // for centered
-    return waggonPos + (aWaggon.length / 2) + this.WAGGON_GAP_INITIAL + (this.WAGGON_GAP * (waggonIndex));
+    return waggonPos + ((aWaggon.length / 2) + this.WAGGON_GAP_INITIAL + (this.WAGGON_GAP * (waggonIndex))) * this.zoomFactor;
   }
 
   findWaggonIndexOnTrack(aWaggon: Waggon): number {
