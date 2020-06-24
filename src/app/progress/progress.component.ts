@@ -353,11 +353,11 @@ export class ProgressComponent implements OnInit {
     }
     console.log('removed ' + removedWaggons.length + ' waggons.');
     // add
-    const index = aTargetWaggon.track.waggons.indexOf(aTargetWaggon);
-    for (const wg of removedWaggons) {
-      console.log('moving: ' + wg.waggonNumber + ' to track: ' + aTargetWaggon.track.trackNumber);
-      wg.track = aTargetWaggon.track;
-      aTargetWaggon.track.waggons.splice(index + 1, 0, wg);
+    const waggonIndex = aTargetWaggon.track.waggons.indexOf(aTargetWaggon);
+    for (let addIndex = removedWaggons.length - 1; addIndex >= 0; addIndex--) {
+      console.log('moving: ' + removedWaggons[addIndex].waggonNumber + ' to track: ' + aTargetWaggon.track.trackNumber);
+      removedWaggons[addIndex].track = aTargetWaggon.track;
+      aTargetWaggon.track.waggons.splice(waggonIndex + 1, 0, removedWaggons[addIndex]);
     }
   }
 }
