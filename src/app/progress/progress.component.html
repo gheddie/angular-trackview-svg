@@ -5,7 +5,7 @@
   <svg style="border:1px solid black"
        [attr.width]="getSvgWidth()"
        [attr.height]="getSvgHeight()">
-    <line *ngFor="let track of tracks"
+    <line *ngFor="let track of svgTrackModel.tracks"
           [attr.x1]="getTrackStartX(track)"
           [attr.y1]="getTrackStartY(track)"
           [attr.x2]="track.xTo * this.zoomFactor"

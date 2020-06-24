@@ -19,8 +19,6 @@ export class ProgressComponent implements OnInit {
 
   private readonly DRAG_ORIGIN_DISTANCE = 25;
 
-  tracks: Track[];
-
   private sanitizer: DomSanitizer;
 
   private trackAngle: number;
@@ -55,8 +53,6 @@ export class ProgressComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.svgTrackModel = new SvgTrackModel(900, 1300);
-
     const t1 = new Track('T1', 100, 100, 500, 100, [
       new Waggon('W1', 25),
       new Waggon('W2', 50),
@@ -80,9 +76,11 @@ export class ProgressComponent implements OnInit {
       new Waggon('W8', 125)
     ], t2);
 
-    this.tracks = [
-      t1, t2, t3, t4, t5
-    ];
+    const t6 = new Track('T5', null, null, 1200, 1500, [
+      new Waggon('W9', 125)
+    ], t5);
+
+    this.svgTrackModel = new SvgTrackModel(1600, 1300, [t1, t2, t3, t4, t5, t6]);
   }
 
   get generateTransformOrigin(): SafeStyle {
@@ -141,7 +139,7 @@ export class ProgressComponent implements OnInit {
   collectWaggons(onlySelected: boolean): Waggon[] {
 
     const collectedWaggons = [];
-    for (const tr of this.tracks) {
+    for (const tr of this.svgTrackModel.tracks) {
       if (tr.waggons != null) {
         for (const wg of tr.waggons) {
           if (!onlySelected) {
@@ -435,10 +433,10 @@ export class ProgressComponent implements OnInit {
   }
 
   getSvgWidth(): number {
-    return this.svgTrackModel.width;
+    return this.svgTrackModel.width * this.zoomFactor;
   }
 
   getSvgHeight(): number {
-    return this.svgTrackModel.height;
+    return this.svgTrackModel.height * this.zoomFactor;
   }
 }
