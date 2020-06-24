@@ -254,16 +254,16 @@ export class ProgressComponent implements OnInit {
 
   getTrackStartX(aTrack: Track): number {
     if (aTrack.parentTrack != null) {
-      return aTrack.parentTrack.xTo;
+      return aTrack.parentTrack.xTo * this.zoomFactor;
     }
-    return aTrack.xFrom;
+    return aTrack.xFrom * this.zoomFactor;
   }
 
   getTrackStartY(aTrack: Track): number {
     if (aTrack.parentTrack != null) {
-      return aTrack.parentTrack.yTo;
+      return aTrack.parentTrack.yTo * this.zoomFactor;
     }
-    return aTrack.yFrom;
+    return aTrack.yFrom * this.zoomFactor;
   }
 
   getTrackOriginX(aTrack: Track): number {

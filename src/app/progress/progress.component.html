@@ -9,8 +9,8 @@
 
           [attr.x1]="getTrackStartX(track)"
           [attr.y1]="getTrackStartY(track)"
-          [attr.x2]="track.xTo"
-          [attr.y2]="track.yTo"
+          [attr.x2]="track.xTo * this.zoomFactor"
+          [attr.y2]="track.yTo * this.zoomFactor"
           style="stroke:rgb(0,0,0);stroke-width:0.5px">
       <title>track</title>
     </line>
