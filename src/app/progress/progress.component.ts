@@ -4,6 +4,7 @@ import {Waggon} from '../waggon';
 import {Point} from '../point';
 import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 import {Quadrant} from '../quadrant.enum';
+import {SvgTrackModel} from '../svg-track-model';
 
 @Component({
   selector: 'app-progress',
@@ -46,11 +47,15 @@ export class ProgressComponent implements OnInit {
 
   public zoomFactor: number = 1;
 
+  svgTrackModel: SvgTrackModel;
+
   constructor(private aSanitizer: DomSanitizer) {
     this.sanitizer = aSanitizer;
   }
 
   ngOnInit(): void {
+
+    this.svgTrackModel = new SvgTrackModel(900, 1300);
 
     const t1 = new Track('T1', 100, 100, 500, 100, [
       new Waggon('W1', 25),
@@ -430,10 +435,10 @@ export class ProgressComponent implements OnInit {
   }
 
   getSvgWidth(): number {
-    return 1300;
+    return this.svgTrackModel.width;
   }
 
   getSvgHeight(): number {
-    return 900;
+    return this.svgTrackModel.height;
   }
 }
