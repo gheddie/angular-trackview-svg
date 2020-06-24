@@ -1,4 +1,7 @@
-<div class="trackview" (mousemove)="mouseMovedOnParent($event)" (mouseup)="mouseUpOnParent()" (scroll)="trackViewScrolled($event)">
+<div class="trackview"
+     (mousemove)="mouseMovedOnParent($event)"
+     (mouseup)="mouseUpOnParent()"
+     (scroll)="trackViewScrolled($event)">
 
   <svg height="1400" width="1800">
 
@@ -45,3 +48,7 @@
   </div>
 
 </div>
+
+<button (click)="zoomIn()">Zoom++</button>
+<button (click)="zoomOut()">Zoom--</button>
+zoom: {{zoomFactor}}

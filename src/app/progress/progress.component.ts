@@ -44,6 +44,8 @@ export class ProgressComponent implements OnInit {
 
   private scrolledToLeft: number;
 
+  public zoomFactor: number = 1;
+
   constructor(private aSanitizer: DomSanitizer) {
     this.sanitizer = aSanitizer;
   }
@@ -389,11 +391,21 @@ export class ProgressComponent implements OnInit {
     }
   }
 
-  @HostListener('scroll', ['$event'])
+  // @HostListener('scroll', ['$event'])
   public trackViewScrolled($event: Event) {
     const trackView: HTMLDivElement = (event.srcElement as HTMLDivElement);
     this.scrolledToTop = trackView.scrollTop;
     this.scrolledToLeft = trackView.scrollLeft;
     console.log('scrolled to [top:' + this.scrolledToTop + '|left:' + this.scrolledToLeft + ']');
+  }
+
+  zoomIn() {
+    console.log('zoomIn');
+    this.zoomFactor = this.zoomFactor + 0.1;
+  }
+
+  zoomOut() {
+    console.log('zoomOut');
+    this.zoomFactor = this.zoomFactor - 0.1;
   }
 }
