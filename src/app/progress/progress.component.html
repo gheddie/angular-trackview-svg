@@ -2,11 +2,10 @@
      (mousemove)="mouseMovedOnParent($event)"
      (mouseup)="mouseUpOnParent()"
      (scroll)="trackViewScrolled($event)">
-
-  <svg height="1400" width="1800">
-
+  <svg style="border:1px solid black"
+       [attr.width]="getSvgWidth()"
+       [attr.height]="getSvgHeight()">
     <line *ngFor="let track of tracks"
-
           [attr.x1]="getTrackStartX(track)"
           [attr.y1]="getTrackStartY(track)"
           [attr.x2]="track.xTo * this.zoomFactor"
@@ -14,39 +13,29 @@
           style="stroke:rgb(0,0,0);stroke-width:0.5px">
       <title>track</title>
     </line>
-
     <rect *ngFor="let waggon of collectWaggons(false)"
-
           (click)="waggonClicked(waggon)"
-
           style="stroke:#333333;opacity:0.4;border:5px solid green"
-
           [style.fill]="waggonFill(waggon)"
-
           [style.transform-origin]="generateTransformOrigin"
           [style.transform-box]="generateTransformBox"
           [style.transform]="generateWaggonTransform(waggon)"
-
           [attr.x]="calculateWaggonX(waggon)"
           [attr.y]="calculateWaggonY(waggon)"
           [attr.width]="calculateWaggonWidth(waggon)"
           [attr.height]="calculateWaggonHeight(waggon)"
-
           (mousedown)="mouseDownOnWaggon($event, waggon)"
           (mouseup)="mouseUpOnWaggon($event, waggon)"
           (mouseenter)="waggonTriggeredAsDropTarget(waggon, true)"
           (mouseleave)="waggonTriggeredAsDropTarget(waggon, false)">
-
       <title>{{generateWaggonTooltip(waggon)}}</title>
     </rect>
   </svg>
-
   <div class="dragging-ghost" style="visibility:{{showDraggingGhost()}}; top:{{draggingGhostTop()}}px; left: {{draggingGhostLeft()}}px; border: 1px solid black">
     <span *ngFor="let waggon of collectWaggons(true)">
       {{waggon.waggonNumber}}<br>
     </span>
   </div>
-
 </div>
 
 <button (click)="zoomIn()">Zoom++</button>

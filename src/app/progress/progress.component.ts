@@ -428,4 +428,12 @@ export class ProgressComponent implements OnInit {
   resetZoom() {
     this.zoomFactor = 1;
   }
+
+  getSvgWidth(): number {
+    return 1300;
+  }
+
+  getSvgHeight(): number {
+    return 900;
+  }
 }
