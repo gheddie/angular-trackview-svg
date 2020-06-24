@@ -199,7 +199,7 @@ export class ProgressComponent implements OnInit {
   }
 
   calculateWaggonHeight(aWaggon: Waggon): number {
-    return 20;
+    return 20 * this.zoomFactor;
   }
 
   private calculateTrackPoint(track: Track, aDistanceFromOrigin: number, inverted: boolean): Point {
