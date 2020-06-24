@@ -1,6 +1,6 @@
-<div (mousemove)="mouseMovedOnParent($event)" (mouseup)="mouseUpOnParent()">
+<div class="trackview" (mousemove)="mouseMovedOnParent($event)" (mouseup)="mouseUpOnParent()" (scroll)="trackViewScrolled($event)">
 
-  <svg height="600" width="1200">
+  <svg height="1400" width="1800">
 
     <line *ngFor="let track of tracks"
 

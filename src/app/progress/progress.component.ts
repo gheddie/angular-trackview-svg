@@ -1,4 +1,4 @@
-import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, HostListener, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {Track} from '../track';
 import {Waggon} from '../waggon';
 import {Point} from '../point';
@@ -40,6 +40,10 @@ export class ProgressComponent implements OnInit {
 
   private dropTargetWaggon: Waggon = null;
 
+  private scrolledToTop: number;
+
+  private scrolledToLeft: number;
+
   constructor(private aSanitizer: DomSanitizer) {
     this.sanitizer = aSanitizer;
   }
@@ -52,15 +56,19 @@ export class ProgressComponent implements OnInit {
       new Waggon('W3', 35),
     ], null);
 
-    const t2 = new Track('T2', null, null, 900, 500, [
+    const t2 = new Track('T2', null, null, 700, 300, [
       new Waggon('W4', 25),
       new Waggon('W5', 15)
     ], t1);
 
-    const t3 = new Track('T3', null, null, 900, 100, [new Waggon('W6', 125)], t1);
+    const t3 = new Track('T3', null, null, 1200, 100, [
+      new Waggon('W6', 125)
+    ], t1);
+
+    const t4 = new Track('T4', null, null, 1200, 300, [], t2);
 
     this.tracks = [
-      t1, t2, t3
+      t1, t2, t3, t4
     ];
   }
 
@@ -274,11 +282,25 @@ export class ProgressComponent implements OnInit {
   }
 
   draggingGhostTop(): number {
-    return this.mouseY;
+    // watch scrolling
+    let result = 0;
+    if (this.scrolledToTop > 0) {
+      result = this.mouseY + this.scrolledToTop;
+    } else {
+      result = this.mouseY;
+    }
+    return result;
   }
 
   draggingGhostLeft(): number {
-    return this.mouseX;
+    // watch scrolling
+    let result = 0;
+    if (this.scrolledToLeft > 0) {
+      result = this.mouseX + this.scrolledToLeft;
+    } else {
+      result = this.mouseX;
+    }
+    return result;
   }
 
   mouseMovedOnParent($event: MouseEvent): void {
@@ -359,5 +381,13 @@ export class ProgressComponent implements OnInit {
       removedWaggons[addIndex].track = aTargetWaggon.track;
       aTargetWaggon.track.waggons.splice(waggonIndex + 1, 0, removedWaggons[addIndex]);
     }
+  }
+
+  @HostListener('scroll', ['$event'])
+  public trackViewScrolled($event: Event) {
+    const trackView: HTMLDivElement = (event.srcElement as HTMLDivElement);
+    this.scrolledToTop = trackView.scrollTop;
+    this.scrolledToLeft = trackView.scrollLeft;
+    console.log('scrolled to [top:' + this.scrolledToTop + '|left:' + this.scrolledToLeft + ']');
   }
 }

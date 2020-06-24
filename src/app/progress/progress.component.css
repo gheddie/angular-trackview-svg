@@ -32,3 +32,12 @@
   font-family: 'Helvetica Neue', sans-serif; font-size: 8px; line-height: 24px; margin: 0 0 24px; text-align: justify; text-justify: inter-word;
   background-color: lightgray;
 }
+
+.trackview {
+  width: 1200px;
+  height: 600px;
+  position: relative;
+  background-color: aliceblue;
+  border: 1px solid black;
+  overflow: scroll;
+}
