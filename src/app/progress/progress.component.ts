@@ -204,7 +204,7 @@ export class ProgressComponent implements OnInit {
     const diffX = track.xTo - this.getTrackOriginX(track);
     const diffY = track.yTo - this.getTrackOriginY(track);
 
-    const trackLenght = Math.sqrt((Math.pow(track.xTo - this.getTrackOriginX(track), 2)) + (Math.pow(track.yTo - this.getTrackOriginY(track), 2)));
+    const trackLenght = Math.sqrt((Math.pow(track.xTo - this.getTrackOriginX(track), 2)) + (Math.pow(track.yTo - this.getTrackOriginY(track), 2))) * this.zoomFactor;
 
     let xRes = 0;
     let yRes = 0;
