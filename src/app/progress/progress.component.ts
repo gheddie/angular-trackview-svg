@@ -211,7 +211,9 @@ export class ProgressComponent implements OnInit {
 
     if (inverted) {
       aDistanceFromOrigin = trackLenght - aDistanceFromOrigin;
-    }Math.sqrt((Math.pow(track.xTo - track.getOriginX(), 2)) + (Math.pow(track.yTo - track.getOriginY(), 2)));
+    }
+
+    Math.sqrt((Math.pow(track.xTo - track.getOriginX(), 2)) + (Math.pow(track.yTo - track.getOriginY(), 2)));
 
     xRes = track.xTo - (track.xTo - track.getOriginX()) * aDistanceFromOrigin / trackLenght;
     yRes = track.yTo - (track.yTo - track.getOriginY()) * aDistanceFromOrigin / trackLenght;
@@ -407,5 +409,9 @@ export class ProgressComponent implements OnInit {
   zoomOut() {
     console.log('zoomOut');
     this.zoomFactor = this.zoomFactor - 0.1;
+  }
+
+  resetZoom() {
+    this.zoomFactor = 1;
   }
 }
