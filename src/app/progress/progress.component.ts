@@ -218,7 +218,7 @@ export class ProgressComponent implements OnInit {
     xRes = track.xTo - (track.xTo - this.getTrackOriginX(track)) * aDistanceFromOrigin / trackLenght;
     yRes = track.yTo - (track.yTo - this.getTrackOriginY(track)) * aDistanceFromOrigin / trackLenght;
 
-    return new Point(xRes, yRes);
+    return new Point(xRes * this.zoomFactor, yRes * this.zoomFactor);
   }
 
   getQuadrant(aTrack: Track): Quadrant {
