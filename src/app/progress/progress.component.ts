@@ -65,10 +65,16 @@ export class ProgressComponent implements OnInit {
       new Waggon('W6', 125)
     ], t1);
 
-    const t4 = new Track('T4', null, null, 1200, 300, [], t2);
+    const t4 = new Track('T4', null, null, 1200, 300, [
+      new Waggon('W7', 125)
+    ], t2);
+
+    const t5 = new Track('T5', null, null, 1200, 800, [
+      new Waggon('W8', 125)
+    ], t2);
 
     this.tracks = [
-      t1, t2, t3, t4
+      t1, t2, t3, t4, t5
     ];
   }
 
