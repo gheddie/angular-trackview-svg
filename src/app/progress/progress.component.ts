@@ -54,30 +54,27 @@ export class ProgressComponent implements OnInit {
   ngOnInit(): void {
 
     const t1 = new Track('T1', 100, 100, 500, 100, [
-      new Waggon('W1', 25),
-      new Waggon('W2', 50),
-      new Waggon('W3', 35),
+      new Waggon('W1', 100),
+      new Waggon('W2', 12),
+      new Waggon('W3', 75),
+      new Waggon('W4', 125),
+      new Waggon('W5', 15),
+      new Waggon('W6', 40)
     ], null);
 
     const t2 = new Track('T2', null, null, 700, 300, [
-      new Waggon('W4', 25),
-      new Waggon('W5', 15)
     ], t1);
 
     const t3 = new Track('T3', null, null, 1200, 100, [
-      new Waggon('W6', 125)
     ], t1);
 
     const t4 = new Track('T4', null, null, 1200, 300, [
-      new Waggon('W7', 125)
     ], t2);
 
     const t5 = new Track('T5', null, null, 1200, 800, [
-      new Waggon('W8', 125)
     ], t2);
 
     const t6 = new Track('T5', null, null, 1200, 1500, [
-      new Waggon('W9', 125)
     ], t5);
 
     this.svgTrackModel = new SvgTrackModel(1600, 1300, [t1, t2, t3, t4, t5, t6]);
@@ -159,13 +156,16 @@ export class ProgressComponent implements OnInit {
 
   calcuateWaggonPositionOnTrack(aWaggon: Waggon): number {
 
-    const waggonIndex = this.findWaggonIndexOnTrack(aWaggon);
+    console.log('calcuateWaggonPositionOnTrack: ' + aWaggon.waggonNumber);
     let waggonPos = 0;
-    for (let i = 0; i < waggonIndex; i++) {
-      waggonPos += aWaggon.track.waggons[i].length * this.zoomFactor;
+    const waggonIndex = this.findWaggonIndexOnTrack(aWaggon);
+    const trackWaggons = aWaggon.track.waggons;
+    let border = 0;
+    for (let index = 0; index <= waggonIndex; index++) {
+      border += trackWaggons[index].length;
     }
-    // for centered
-    return waggonPos + ((aWaggon.length / 2) + this.WAGGON_GAP_INITIAL + (this.WAGGON_GAP * (waggonIndex))) * this.zoomFactor;
+    waggonPos = border - aWaggon.length / 2;
+    return waggonPos;
   }
 
   findWaggonIndexOnTrack(aWaggon: Waggon): number {
@@ -184,7 +184,7 @@ export class ProgressComponent implements OnInit {
 
     const track = aWaggon.track;
     const point = this.calculateTrackPoint(track, this.calcuateWaggonPositionOnTrack(aWaggon), true);
-    return point.x - (aWaggon.length / 2);
+    return point.x - (aWaggon.length / 2) * this.zoomFactor;
   }
 
   calculateWaggonY(aWaggon: Waggon): number {
@@ -195,7 +195,7 @@ export class ProgressComponent implements OnInit {
   }
 
   calculateWaggonWidth(aWaggon: Waggon): number {
-    return aWaggon.length;
+    return aWaggon.length * this.zoomFactor;
   }
 
   calculateWaggonHeight(aWaggon: Waggon): number {
