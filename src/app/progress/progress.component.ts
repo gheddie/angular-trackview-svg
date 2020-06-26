@@ -179,7 +179,7 @@ export class ProgressComponent implements OnInit {
     const trackWaggons = aWaggon.track.waggons;
     let border = 0;
     for (let index = 0; index <= waggonIndex; index++) {
-      border += trackWaggons[index].length * this.zoomFactor;
+      border += trackWaggons[index].length * this.zoomFactor + this.WAGGON_GAP * this.zoomFactor;
     }
     waggonPos += border - aWaggon.length * this.zoomFactor / 2;
     return waggonPos;
