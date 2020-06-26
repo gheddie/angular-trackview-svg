@@ -63,18 +63,33 @@ export class ProgressComponent implements OnInit {
     ], null);
 
     const t2 = new Track('T2', null, null, 700, 300, [
+      new Waggon('W1', 100),
+      new Waggon('W2', 12),
+      new Waggon('W3', 75)
     ], t1);
 
     const t3 = new Track('T3', null, null, 1200, 100, [
+      new Waggon('W1', 100),
+      new Waggon('W2', 12),
+      new Waggon('W3', 75)
     ], t1);
 
     const t4 = new Track('T4', null, null, 1200, 300, [
+      new Waggon('W1', 100),
+      new Waggon('W2', 12),
+      new Waggon('W3', 75)
     ], t2);
 
     const t5 = new Track('T5', null, null, 1200, 800, [
+      new Waggon('W1', 100),
+      new Waggon('W2', 12),
+      new Waggon('W3', 75)
     ], t2);
 
     const t6 = new Track('T5', null, null, 1200, 1500, [
+      new Waggon('W1', 100),
+      new Waggon('W2', 12),
+      new Waggon('W3', 75)
     ], t5);
 
     this.svgTrackModel = new SvgTrackModel(1600, 1300, [t1, t2, t3, t4, t5, t6]);
@@ -157,14 +172,16 @@ export class ProgressComponent implements OnInit {
   calcuateWaggonPositionOnTrack(aWaggon: Waggon): number {
 
     console.log('calcuateWaggonPositionOnTrack: ' + aWaggon.waggonNumber);
-    let waggonPos = 0;
+
+    let waggonPos = this.WAGGON_GAP_INITIAL * this.zoomFactor;
+
     const waggonIndex = this.findWaggonIndexOnTrack(aWaggon);
     const trackWaggons = aWaggon.track.waggons;
     let border = 0;
     for (let index = 0; index <= waggonIndex; index++) {
-      border += trackWaggons[index].length;
+      border += trackWaggons[index].length * this.zoomFactor;
     }
-    waggonPos = border - aWaggon.length / 2;
+    waggonPos += border - aWaggon.length * this.zoomFactor / 2;
     return waggonPos;
   }
 
